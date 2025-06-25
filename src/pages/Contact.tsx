@@ -1,14 +1,14 @@
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { toast } from "@/hooks/use-toast";
-import { ArrowRight, Mail, Calendar, Clock, Users } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Mail, MapPin, Phone, Clock, Send, CheckCircle } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 
@@ -18,49 +18,98 @@ const Contact = () => {
     contactName: "",
     email: "",
     phone: "",
-    services: [],
     budget: "",
+    services: [],
     timeline: "",
     projectDescription: "",
-    hearAboutUs: ""
+    urgency: ""
   });
+  
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const services = [
+    "AI Solutions & Machine Learning",
+    "Business Process Solutions", 
+    "Process Automation & RPA",
+    "Data Analytics & Business Intelligence",
+    "Cloud Migration & Infrastructure",
+    "Training & Support"
+  ];
 
-  const handleServiceChange = (service: string, checked: boolean) => {
+  const budgetRanges = [
+    "Under $10,000",
+    "$10,000 - $25,000", 
+    "$25,000 - $50,000",
+    "$50,000 - $100,000",
+    "$100,000+"
+  ];
+
+  const timelineOptions = [
+    "1-3 months",
+    "3-6 months",
+    "6-12 months",
+    "12+ months"
+  ];
+
+  const handleServiceToggle = (service) => {
     setFormData(prev => ({
       ...prev,
-      services: checked 
-        ? [...prev.services, service]
-        : prev.services.filter(s => s !== service)
+      services: prev.services.includes(service) 
+        ? prev.services.filter(s => s !== service)
+        : [...prev.services, service]
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    // Simulate form submission
-    setTimeout(() => {
-      toast({
-        title: "Consultation Request Submitted!",
-        description: "We'll get back to you within 24 hours with next steps.",
-      });
-      setIsSubmitting(false);
-      // Reset form
-      setFormData({
-        companyName: "",
-        contactName: "",
-        email: "",
-        phone: "",
-        services: [],
-        budget: "",
-        timeline: "",
-        projectDescription: "",
-        hearAboutUs: ""
-      });
-    }, 2000);
+    // Here you would typically send the data to your backend
+    console.log("Form submitted:", formData);
+    setIsSubmitted(true);
   };
+
+  if (isSubmitted) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        
+        <section className="py-32">
+          <div className="container mx-auto px-4 text-center">
+            <div className="max-w-2xl mx-auto">
+              <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircle className="h-10 w-10 text-green-600" />
+              </div>
+              <h1 className="text-4xl font-bold mb-6">Thank You!</h1>
+              <p className="text-xl text-gray-600 mb-8">
+                Your consultation request has been submitted successfully. Our team will review your requirements and get back to you within 24 hours.
+              </p>
+              <div className="bg-gray-50 rounded-lg p-6 mb-8">
+                <h3 className="font-semibold mb-2">What happens next?</h3>
+                <ul className="text-left space-y-2 text-gray-600">
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                    You'll receive a confirmation email shortly
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                    Our team will review your requirements
+                  </li>
+                  <li className="flex items-center">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+                    We'll schedule a consultation call within 24 hours
+                  </li>
+                </ul>
+              </div>
+              <Button onClick={() => setIsSubmitted(false)} className="bg-purple-600 hover:bg-purple-700">
+                Submit Another Request
+              </Button>
+            </div>
+          </div>
+        </section>
+        
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -70,240 +119,209 @@ const Contact = () => {
       <section className="py-20 bg-gradient-to-br from-purple-900 via-purple-800 to-blue-900 text-white">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">Get Your Free Consultation</h1>
-          <p className="text-xl text-purple-100 max-w-2xl mx-auto">
-            Ready to transform your business? Let's discuss your needs and create a customized solution that drives results.
+          <p className="text-xl text-purple-100 max-w-3xl mx-auto">
+            Ready to transform your business with AI and automation? Let's discuss your specific needs and create a customized solution.
           </p>
         </div>
       </section>
 
+      {/* Contact Form */}
       <section className="py-20">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-            {/* Contact Form */}
+            {/* Contact Information */}
+            <div className="space-y-8">
+              <div>
+                <h2 className="text-3xl font-bold mb-6">Contact Information</h2>
+                <p className="text-gray-600 mb-8">
+                  Get in touch with our experts to discuss your project requirements and explore how we can help transform your business.
+                </p>
+              </div>
+
+              <div className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <Mail className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Email</h3>
+                    <p className="text-gray-600">info@qybrrlabs.com</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <Phone className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Phone</h3>
+                    <p className="text-gray-600">+234 (0) 123 456 7890</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <MapPin className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Location</h3>
+                    <p className="text-gray-600">Lagos, Nigeria</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <Clock className="h-6 w-6 text-purple-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">Business Hours</h3>
+                    <p className="text-gray-600">Mon - Fri: 9:00 AM - 6:00 PM</p>
+                    <p className="text-gray-600">Sat: 10:00 AM - 4:00 PM</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Consultation Request Form */}
             <div className="lg:col-span-2">
-              <Card>
+              <Card className="shadow-xl">
                 <CardHeader>
-                  <CardTitle className="text-2xl">Project Details</CardTitle>
+                  <CardTitle className="text-2xl">Request a Consultation</CardTitle>
                   <CardDescription>
-                    Tell us about your project and we'll provide a detailed proposal tailored to your needs.
+                    Fill out this form and our team will get back to you within 24 hours with a customized proposal.
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
                         <Label htmlFor="companyName">Company Name *</Label>
                         <Input
                           id="companyName"
-                          value={formData.companyName}
-                          onChange={(e) => setFormData(prev => ({ ...prev, companyName: e.target.value }))}
                           required
+                          value={formData.companyName}
+                          onChange={(e) => setFormData(prev => ({...prev, companyName: e.target.value}))}
+                          placeholder="Your Company Name"
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div>
                         <Label htmlFor="contactName">Contact Name *</Label>
                         <Input
                           id="contactName"
-                          value={formData.contactName}
-                          onChange={(e) => setFormData(prev => ({ ...prev, contactName: e.target.value }))}
                           required
+                          value={formData.contactName}
+                          onChange={(e) => setFormData(prev => ({...prev, contactName: e.target.value}))}
+                          placeholder="Your Full Name"
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
                         <Label htmlFor="email">Email Address *</Label>
                         <Input
                           id="email"
                           type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                           required
+                          value={formData.email}
+                          onChange={(e) => setFormData(prev => ({...prev, email: e.target.value}))}
+                          placeholder="your.email@company.com"
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div>
                         <Label htmlFor="phone">Phone Number</Label>
                         <Input
                           id="phone"
-                          type="tel"
                           value={formData.phone}
-                          onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                          onChange={(e) => setFormData(prev => ({...prev, phone: e.target.value}))}
+                          placeholder="+234 (0) 123 456 7890"
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-3">
-                      <Label>Services Needed * (Select all that apply)</Label>
+                    <div>
+                      <Label className="text-base font-semibold">Services Needed *</Label>
+                      <p className="text-sm text-gray-600 mb-3">Select all services that apply to your project</p>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {[
-                          "AI Solutions & Machine Learning",
-                          "Business Process Optimization",
-                          "Process Automation & RPA",
-                          "Data Analytics & Insights",
-                          "Digital Transformation Consulting",
-                          "Custom Software Development"
-                        ].map((service) => (
+                        {services.map((service) => (
                           <div key={service} className="flex items-center space-x-2">
                             <Checkbox
                               id={service}
                               checked={formData.services.includes(service)}
-                              onCheckedChange={(checked) => handleServiceChange(service, checked as boolean)}
+                              onCheckedChange={() => handleServiceToggle(service)}
                             />
-                            <Label htmlFor={service} className="text-sm">{service}</Label>
+                            <Label htmlFor={service} className="text-sm cursor-pointer">
+                              {service}
+                            </Label>
                           </div>
                         ))}
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="budget">Budget Range</Label>
-                        <Select value={formData.budget} onValueChange={(value) => setFormData(prev => ({ ...prev, budget: value }))}>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <Label>Project Budget *</Label>
+                        <Select value={formData.budget} onValueChange={(value) => setFormData(prev => ({...prev, budget: value}))}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select budget range" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="under-10k">Under $10,000</SelectItem>
-                            <SelectItem value="10k-25k">$10,000 - $25,000</SelectItem>
-                            <SelectItem value="25k-50k">$25,000 - $50,000</SelectItem>
-                            <SelectItem value="50k-100k">$50,000 - $100,000</SelectItem>
-                            <SelectItem value="over-100k">Over $100,000</SelectItem>
+                            {budgetRanges.map((range) => (
+                              <SelectItem key={range} value={range}>{range}</SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="timeline">Project Timeline</Label>
-                        <Select value={formData.timeline} onValueChange={(value) => setFormData(prev => ({ ...prev, timeline: value }))}>
+                      <div>
+                        <Label>Project Timeline *</Label>
+                        <Select value={formData.timeline} onValueChange={(value) => setFormData(prev => ({...prev, timeline: value}))}>
                           <SelectTrigger>
                             <SelectValue placeholder="Select timeline" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="asap">ASAP</SelectItem>
-                            <SelectItem value="1-3-months">1-3 months</SelectItem>
-                            <SelectItem value="3-6-months">3-6 months</SelectItem>
-                            <SelectItem value="6-12-months">6-12 months</SelectItem>
-                            <SelectItem value="flexible">Flexible</SelectItem>
+                            {timelineOptions.map((timeline) => (
+                              <SelectItem key={timeline} value={timeline}>{timeline}</SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                       </div>
                     </div>
 
-                    <div className="space-y-2">
+                    <div>
                       <Label htmlFor="projectDescription">Project Description *</Label>
                       <Textarea
                         id="projectDescription"
-                        placeholder="Please describe your project, current challenges, and what you hope to achieve..."
-                        value={formData.projectDescription}
-                        onChange={(e) => setFormData(prev => ({ ...prev, projectDescription: e.target.value }))}
-                        className="min-h-[120px]"
                         required
+                        value={formData.projectDescription}
+                        onChange={(e) => setFormData(prev => ({...prev, projectDescription: e.target.value}))}
+                        placeholder="Please describe your project requirements, current challenges, and desired outcomes..."
+                        rows={5}
                       />
                     </div>
 
-                    <div className="space-y-2">
-                      <Label htmlFor="hearAboutUs">How did you hear about us?</Label>
-                      <Select value={formData.hearAboutUs} onValueChange={(value) => setFormData(prev => ({ ...prev, hearAboutUs: value }))}>
+                    <div>
+                      <Label>Project Urgency</Label>
+                      <Select value={formData.urgency} onValueChange={(value) => setFormData(prev => ({...prev, urgency: value}))}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select an option" />
+                          <SelectValue placeholder="How urgent is this project?" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="google">Google Search</SelectItem>
-                          <SelectItem value="social-media">Social Media</SelectItem>
-                          <SelectItem value="referral">Referral</SelectItem>
-                          <SelectItem value="linkedin">LinkedIn</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
+                          <SelectItem value="low">Low - Just exploring options</SelectItem>
+                          <SelectItem value="medium">Medium - Planning to start in 3-6 months</SelectItem>
+                          <SelectItem value="high">High - Need to start within 1-3 months</SelectItem>
+                          <SelectItem value="urgent">Urgent - Need to start immediately</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
 
                     <Button 
                       type="submit" 
-                      size="lg" 
-                      className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-                      disabled={isSubmitting}
+                      className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg py-6"
                     >
-                      {isSubmitting ? "Submitting..." : "Submit Consultation Request"}
-                      <ArrowRight className="ml-2 h-5 w-5" />
+                      <Send className="mr-2 h-5 w-5" />
+                      Request Free Consultation
                     </Button>
                   </form>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Contact Info Sidebar */}
-            <div className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Calendar className="mr-2 h-5 w-5 text-purple-600" />
-                    What Happens Next?
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-purple-600 font-semibold text-sm">1</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold">Initial Review</h4>
-                      <p className="text-sm text-gray-600">We review your submission within 24 hours</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-purple-600 font-semibold text-sm">2</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold">Discovery Call</h4>
-                      <p className="text-sm text-gray-600">30-minute consultation to understand your needs</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-purple-600 font-semibold text-sm">3</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold">Custom Proposal</h4>
-                      <p className="text-sm text-gray-600">Detailed proposal with timeline and pricing</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Clock className="mr-2 h-5 w-5 text-purple-600" />
-                    Quick Response
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm text-gray-600 mb-4">
-                    We understand that time is crucial for your business. That's why we guarantee a response within 24 hours.
-                  </p>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center">
-                      <Mail className="mr-2 h-4 w-4 text-purple-600" />
-                      <span>info@qybrrlabs.com</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Users className="mr-2 h-4 w-4 text-purple-600" />
-                      <span>Lagos, Nigeria</span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-gradient-to-br from-purple-50 to-blue-50">
-                <CardContent className="p-6">
-                  <h3 className="font-semibold mb-2">Not sure what you need?</h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Book a free 15-minute consultation call to discuss your challenges and explore potential solutions.
-                  </p>
-                  <Button variant="outline" className="w-full">
-                    Book Quick Call
-                  </Button>
                 </CardContent>
               </Card>
             </div>
